@@ -1,0 +1,112 @@
+<!-- Copyright (C) 2022 Lílian Ferreira de Freitas
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Validar CPF ou CNPJ</title>
+    </head>
+    <body>
+        <form>
+            <label for="document">Número do documento</label><br>
+            <input id="document" type="text">
+            <input id="is_valid" type="button" value="É valido?">
+        </form>
+        <p id=result></p>
+    </body>
+</html>
+<script type="text/javascript">
+    var documentInput = document.getElementById('document');
+    var button = document.getElementById('is_valid');
+    var resultText = document.getElementById('result');
+
+    const allowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    function range(start, end) {
+        return [...Array(end-1).keys()].map( i => i + start );
+    }
+
+    function is_valid(id_number) {
+        var filtered = [];
+        for (i in id_number) {
+            if (allowed.includes(id_number[i])) {
+                filtered.push(parseInt(id_number[i]))
+            }
+        }
+
+        switch (filtered.length) {
+            case 11:
+                if (filtered.every( e => e === filtered[0] )) {
+                    return false;
+                } else {
+                    var k = range(2, 10).reverse()[Symbol.iterator]();
+                    var sum = filtered.map( i => i * (k.next().value || 0) ).reduce((a, b) => a + b);
+
+                    var first_digit = (sum * 10) % 11 % 10;
+
+                    var k = range(2, 11).reverse()[Symbol.iterator]();
+                    var sum = filtered.map( i => i * (k.next().value || 0) ).reduce((a, b) => a + b);
+
+                    var second_digit = (sum * 10) % 11 % 10;
+
+                    if ((first_digit === filtered[9]) && (second_digit === filtered[10])) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            case 14:
+                if (filtered.every( e => e === filtered[0] )) {
+                    return false;
+                } else {
+                    var k = range(2, 5).reverse();
+                    k.push(...range(2, 9).reverse());
+                    var k = k[Symbol.iterator]();
+                    var sum = filtered.map( i => i * (k.next().value || 0) ).reduce((a, b) => a + b);
+
+                    var first_digit = (sum * 10) % 11 < 2 ? 0 : 11 - (sum % 11);
+
+                    var k = range(2, 6).reverse();
+                    k.push(...range(2, 9).reverse());
+                    var k = k[Symbol.iterator]();
+                    var sum = filtered.map( i => i * (k.next().value || 0) ).reduce((a, b) => a + b);
+
+                    var second_digit = (sum * 10) % 11 < 2 ? 0 : 11 - (sum % 11);
+
+                    if ((first_digit === filtered[12]) && (second_digit === filtered[13])) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            default:
+                return false;
+        }
+    }
+
+    button.onclick = function() {validate()};
+
+    function validate() {
+        var value = documentInput.value;
+        var res = is_valid(value);
+        if (res == true) {
+            documentInput.style.backgroundColor = "green";
+            resultText.innerHTML = "válido";
+        } else {
+            documentInput.style.backgroundColor = "red";
+            resultText.innerHTML = "não válido";
+        }
+    }
+</script>

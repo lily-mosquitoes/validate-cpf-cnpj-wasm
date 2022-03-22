@@ -1,0 +1,52 @@
+<!-- Copyright (C) 2022 Lílian Ferreira de Freitas
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>. -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Validar CPF ou CNPJ</title>
+    </head>
+    <body>
+        <form>
+            <label for="document">Número do documento</label><br>
+            <input id="document" type="text">
+            <input id="is_valid" type="button" value="É valido?">
+        </form>
+        <p id=result></p>
+    </body>
+</html>
+<script type="module">
+    import init, { is_valid } from "./pkg/validate_cpf_cnpj_wasm.js";
+
+    init().then(() => {
+        var documentInput = document.getElementById('document');
+        var button = document.getElementById('is_valid');
+        var resultText = document.getElementById('result');
+
+        button.onclick = function() {validate()};
+
+        function validate() {
+            var value = documentInput.value;
+            var res = is_valid(value);
+            if (res == true) {
+                documentInput.style.backgroundColor = "green";
+                resultText.innerHTML = "válido";
+            } else {
+                documentInput.style.backgroundColor = "red";
+                resultText.innerHTML = "não válido";
+            }
+        }
+    });
+</script>
