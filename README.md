@@ -18,8 +18,8 @@ This was made only for educational purposes, the source code is not particularly
 
 - you should be able to test the WebAssembly/Rust function by going to:
 
-`http://127.0.0.1:8080/webassembly.html`
+`[http://127.0.0.1:8080/webassembly.html](http://127.0.0.1:8080/webassembly.html)`
 
 - for performance comparison the same function is also implemented in pure JavaScript, you can test by going to:
 
-`http://127.0.0.1:8080/javascript.html`
+`[http://127.0.0.1:8080/javascript.html](http://127.0.0.1:8080/javascript.html)`
